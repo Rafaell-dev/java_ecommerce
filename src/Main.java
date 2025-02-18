@@ -2,9 +2,13 @@ import controller.*;
 import model.*;
 import view.*;
 import exception.*;
+import java.util.Scanner;
+import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
         // Inicializando controladores
         ProdutoController produtoController = new ProdutoController();
         UsuarioController usuarioController = new UsuarioController();
@@ -17,24 +21,90 @@ public class Main {
         CarrinhoView carrinhoView = new CarrinhoView(carrinhoController);
         AdminView adminView = new AdminView(adminController);
 
-        // Adicionando alguns produtos e usuários para teste
+
         produtoController.adicionarProduto(new Produto("1", "Cabo USB", "Cabos", 10.0, 100));
         produtoController.adicionarProduto(new Produto("2", "Carregador", "Carregadores", 20.0, 50));
         usuarioController.adicionarUsuario(new Usuario("1", "Filipe", "filipe@example.com", "gacessorios1234"));
 
-        // Exibindo produtos e informações do usuário
-        produtoView.exibirProdutos();
-        usuarioView.exibirUsuario("1");
 
-        // Adicionando produto ao carrinho
-        carrinhoView.adicionarProdutoAoCarrinho("1");
-        carrinhoView.exibirCarrinho();
 
-        // Testando exceções
-        try {
-            produtoController.buscarProdutoPorId("999"); // Produto não existe
-        } catch (ProdutoNaoEncontradoException e) {
-            System.out.println(e.getMessage());
-        }
+        int escolha;
+        do {
+            System.out.print("----------E-Commerce----------\n" +
+                    "1 = Criar usuário\n" +
+                    "2 = Listar produtos\n" +
+                    "3 = Adicionar produtos ao carrinho\n" +
+                    "4 = Exibir carrinho\n" +
+                    "5 = Administrção\n" +
+                    "0 = sair \n" +
+                    "Escolha uma opção:");
+            escolha = sc.nextInt();
+            sc.nextLine();
+
+            switch (escolha) {
+                case 1:
+                    System.out.print("Nome: ");
+                    String nome = sc.nextLine();
+                    System.out.print("Email: ");
+                    String email = sc.nextLine();
+                    System.out.print("Senha: ");
+                    String senha = sc.nextLine();
+                    String idUsuario = UUID.randomUUID().toString();
+                    Usuario usuario = new Usuario(idUsuario,nome, email, senha);
+                    usuarioController.adicionarUsuario(usuario);
+                    System.out.println("Usuário cadastrado com sucesso!");
+                    break;
+                case 2:
+                    produtoView.exibirProdutos();
+                    break;
+                case 3:
+                    System.out.print("ID do Produto: ");
+                    String idProduto = sc.nextLine();
+                    try {
+                        carrinhoView.adicionarProdutoAoCarrinho(idProduto);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 4:
+                    carrinhoView.exibirCarrinho();
+                    break;
+                case 5:
+                    System.out.print("----------Área Administração----------\n" +
+                            "1 = Adicionar produto\n" +
+                            "2 = Atualizar estoque \n" +
+                            "Escolha uma opção: ");
+                    int adminEscolha = sc.nextInt();
+                    sc.nextLine();
+
+                    if (adminEscolha == 1) {
+                        System.out.print("Título do Produto: ");
+                        String titulo = sc.nextLine();
+                        System.out.print("Preço: ");
+                        double preco = sc.nextDouble();
+                        System.out.print("Categoria: ");
+                        String categoria = sc.nextLine();
+                        idProduto = UUID.randomUUID().toString();
+                        System.out.print("Estoque: ");
+                        int estoque = sc.nextInt();
+                        Produto novoProduto = new Produto(idProduto,titulo,categoria, preco, estoque);
+                        adminView.adicionarProduto(novoProduto);
+                    } else if (adminEscolha == 2) {
+                        System.out.print("ID do Produto: ");
+                        String prodId = sc.nextLine();
+                        System.out.print("Novo Estoque: ");
+                        int novoEstoque = sc.nextInt();
+                        adminView.atualizarEstoque(prodId, novoEstoque);
+                    }
+                    break;
+                case 0:
+                    System.out.println("Encerrando o E-Commerce, até mais!!!");
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+            }
+        } while (escolha != 0);
+        sc.close();
+
     }
 }
