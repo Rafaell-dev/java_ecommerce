@@ -1,26 +1,27 @@
 package controller;
 
-import model.Product;
-import model.User;
+import model.Produto;
+import model.Usuario;
+
 
 public class AdminController {
-    private ProductController productController;
-    private UserController userController;
+    private ProdutoController produtoController;
+    private UsuarioController usuarioController;
 
-    public AdminController(ProductController productController, UserController userController) {
-        this.productController = productController;
-        this.userController = userController;
+    public AdminController(ProdutoController produtoController, UsuarioController usuarioController) {
+        this.produtoController = produtoController;
+        this.usuarioController = usuarioController;
     }
 
-    public void addProduct(Product product) {
-        productController.addProduct(product);
+    public void adicionarProduto(Produto produto) {
+        produtoController.adicionarProduto(produto);
     }
 
-    public void updateProductStock(String id, int stock) {
-        productController.updateProductStock(id, stock);
+    public void atualizarEstoque(String idProduto, int estoque) throws Exception {
+        produtoController.atualizarEstoque(idProduto, estoque);
     }
 
-    public void updateUserPassword(String id, String newPassword) {
-        userController.updateUserPassword(id, newPassword);
+    public void atualizarSenhaUsuario(String idUsuario, String novaSenha) throws Exception {
+        usuarioController.atualizarSenha(idUsuario, novaSenha);
     }
 }

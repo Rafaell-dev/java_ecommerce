@@ -1,35 +1,40 @@
 import controller.*;
 import model.*;
 import view.*;
+import exception.*;
 
 public class Main {
     public static void main(String[] args) {
         // Inicializando controladores
-        ProductController productController = new ProductController();
-        UserController userController = new UserController();
-        CartController cartController = new CartController();
-        AdminController adminController = new AdminController(productController, userController);
+        ProdutoController produtoController = new ProdutoController();
+        UsuarioController usuarioController = new UsuarioController();
+        CarrinhoController carrinhoController = new CarrinhoController(produtoController);
+        AdminController adminController = new AdminController(produtoController, usuarioController);
 
         // Inicializando views
-        ProductView productView = new ProductView(productController);
-        UserView userView = new UserView(userController);
-        CartView cartView = new CartView(cartController);
+        ProdutoView produtoView = new ProdutoView(produtoController);
+        UsuarioView usuarioView = new UsuarioView(usuarioController);
+        CarrinhoView carrinhoView = new CarrinhoView(carrinhoController);
         AdminView adminView = new AdminView(adminController);
 
         // Adicionando alguns produtos e usuários para teste
-        productController.addProduct(new Product("1", "Cabo USB", "Cabos", 10.0, 100));
-        productController.addProduct(new Product("2", "Carregador", "Carregadores", 20.0, 50));
-        userController.addUser(new User("1", "João", "joao@example.com", "senha123"));
+        produtoController.adicionarProduto(new Produto("1", "Cabo USB", "Cabos", 10.0, 100));
+        produtoController.adicionarProduto(new Produto("2", "Carregador", "Carregadores", 20.0, 50));
+        usuarioController.adicionarUsuario(new Usuario("1", "Filipe", "filipe@example.com", "gacessorios1234"));
 
         // Exibindo produtos e informações do usuário
-        productView.displayProducts();
-        userView.displayUserInfo("1");
+        produtoView.exibirProdutos();
+        usuarioView.exibirUsuario("1");
 
         // Adicionando produto ao carrinho
-        Product product = productController.getProductById("1");
-        if (product != null) {
-            cartController.addProductToCart(product);
-            cartView.displayCart();
+        carrinhoView.adicionarProdutoAoCarrinho("1");
+        carrinhoView.exibirCarrinho();
+
+        // Testando exceções
+        try {
+            produtoController.buscarProdutoPorId("999"); // Produto não existe
+        } catch (ProdutoNaoEncontradoException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
