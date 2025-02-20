@@ -16,6 +16,15 @@ public class UsuarioController {
         usuarios.add(usuario);
     }
 
+    public Usuario autenticarUsuario(String email, String senha) throws UsuarioNaoEncontradoException {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getEmail().equals(email) && usuario.autenticar(senha)) {
+                return usuario;
+            }
+        }
+        throw new UsuarioNaoEncontradoException("E-mail ou senha incorretos.");
+    }
+
     public Usuario buscarUsuarioPorId(String id) throws UsuarioNaoEncontradoException {
         for (Usuario usuario : usuarios) {
             if (usuario.getId().equals(id)) {
