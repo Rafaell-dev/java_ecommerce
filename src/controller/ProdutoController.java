@@ -20,6 +20,17 @@ public class ProdutoController {
         return produtos;
     }
 
+    public List<Produto> pesquisarProdutos(String termo) {
+        List<Produto> resultados = new ArrayList<>();
+        for (Produto produto : produtos) {
+            if (produto.getTitulo().toLowerCase().contains(termo.toLowerCase()) ||
+                    produto.getCategoria().toLowerCase().contains(termo.toLowerCase())) {
+                resultados.add(produto);
+            }
+        }
+        return resultados;
+    }
+
     public Produto buscarProdutoPorId(String id) throws ProdutoNaoEncontradoException {
         for (Produto produto : produtos) {
             if (produto.getId().equals(id)) {

@@ -16,6 +16,24 @@ public class UsuarioController {
         usuarios.add(usuario);
     }
 
+    public List<Usuario> listarUsuarios() {
+        return usuarios;
+    }
+
+
+    public void atualizarUsuario(String id, String novoNome, String novoEmail, String novaSenha, String novoTipo) throws UsuarioNaoEncontradoException {
+        Usuario usuario = buscarUsuarioPorId(id);
+        usuario.setNome(novoNome);
+        usuario.setEmail(novoEmail);
+        usuario.setSenha(novaSenha);
+        usuario.setTipo(novoTipo);
+    }
+
+    public void removerUsuario(String id) throws UsuarioNaoEncontradoException {
+        Usuario usuario = buscarUsuarioPorId(id);
+        usuarios.remove(usuario);
+    }
+
     public Usuario autenticarUsuario(String email, String senha) throws UsuarioNaoEncontradoException {
         for (Usuario usuario : usuarios) {
             if (usuario.getEmail().equals(email) && usuario.autenticar(senha)) {
